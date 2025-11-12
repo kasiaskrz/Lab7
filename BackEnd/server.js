@@ -8,7 +8,7 @@ import cors from 'cors';
 app.use(cors());
 
 // middleware to set custom CORS headers
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -20,27 +20,38 @@ import bodyParser from 'body-parser'
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+import mongoose from 'mongoose';
+mongoose.connect('mongodb+srv://admin:admin@katarzynalab.lxrpo7w.mongodb.net/?appName=katarzynalab');
+
+const movieSchema = new mongoose.Schema({
+  title: String,
+  year: String,
+  poster: String
+});
+
+const movieModel = mongoose.model('Movie', movieSchema);
+
 // define a route for the homepage
 app.get('/', (req, res) => {
-    res.send('Welcome to Data Respresentation & Querying');
+  res.send('Welcome to Data Respresentation & Querying');
 });
 
 // define a route to greet the user by name
 app.get('/hello/:name', (req, res) => {
-    const name = req.params.name;
-    res.send(`Hello ${name}`);
+  const name = req.params.name;
+  res.send(`Hello ${name}`);
 });
 
 // define a route to greet the user by name, surname
 app.get('/hello/:name/:surname', (req, res) => {
-    const name = req.params.name;
-    const surname = req.params.surname;
-    res.send(`Hello ${name} ${surname}`);
+  const name = req.params.name;
+  const surname = req.params.surname;
+  res.send(`Hello ${name} ${surname}`);
 });
 
 // define an API endpoint that returns a list of movies
 app.get('/api/movies', (req, res) => {
-    const myMovies = [
+  const myMovies = [
     // movie data
     {
       "Title": "Avengers: Infinity War (server)",
@@ -64,16 +75,20 @@ app.get('/api/movies', (req, res) => {
       "Poster": "https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg"
     }
   ]
-    res.json( { myArray: myMovies }); // send the movie data as a json
+  res.json({ myArray: myMovies }); // send the movie data as a json
 })
 
-// define a POST endpoint to handle movie data submission
-app.post('/api/movies', (req, res) => {
-    console.log(req.body);
-    res.send('POST request to the movies endpoint');
-});
+app.post('/api/movies', async (req, res) => {
+
+  const { title, year, poster } = req.body;
+
+  const newMovie = new movieModel({ title, year, poster });
+  await newMovie.save();
+
+  res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
+})
 
 // start the server and listen on the specified port
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
