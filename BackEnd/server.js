@@ -92,6 +92,11 @@ app.post('/api/movies', async (req, res) => {
 })
 
 
+app.get('/api/movie/:id', async (req, res) => {
+  const movie = await movieModel.findById(req.params.id);
+  res.send(movie);
+});
+
 // start the server and listen on the specified port
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
