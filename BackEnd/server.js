@@ -50,32 +50,35 @@ app.get('/hello/:name/:surname', (req, res) => {
 });
 
 // define an API endpoint that returns a list of movies
-app.get('/api/movies', (req, res) => {
-  const myMovies = [
-    // movie data
-    {
-      "Title": "Avengers: Infinity War (server)",
-      "Year": "2018",
-      "imdbID": "tt4154756",
-      "Type": "movie",
-      "Poster": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_SX300.jpg"
-    },
-    {
-      "Title": "Captain America: Civil War (server)",
-      "Year": "2016",
-      "imdbID": "tt3498820",
-      "Type": "movie",
-      "Poster": "https://m.media-amazon.com/images/M/MV5BMjQ0MTgyNjAxMV5BMl5BanBnXkFtZTgwNjUzMDkyODE@._V1_SX300.jpg"
-    },
-    {
-      "Title": "World War Z (server)",
-      "Year": "2013",
-      "imdbID": "tt0816711",
-      "Type": "movie",
-      "Poster": "https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg"
-    }
-  ]
-  res.json({ myArray: myMovies }); // send the movie data as a json
+app.get('/api/movies', async (req, res) => {
+  // const myMovies = [
+  //   // movie data
+  //   {
+  //     "Title": "Avengers: Infinity War (server)",
+  //     "Year": "2018",
+  //     "imdbID": "tt4154756",
+  //     "Type": "movie",
+  //     "Poster": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_SX300.jpg"
+  //   },
+  //   {
+  //     "Title": "Captain America: Civil War (server)",
+  //     "Year": "2016",
+  //     "imdbID": "tt3498820",
+  //     "Type": "movie",
+  //     "Poster": "https://m.media-amazon.com/images/M/MV5BMjQ0MTgyNjAxMV5BMl5BanBnXkFtZTgwNjUzMDkyODE@._V1_SX300.jpg"
+  //   },
+  //   {
+  //     "Title": "World War Z (server)",
+  //     "Year": "2013",
+  //     "imdbID": "tt0816711",
+  //     "Type": "movie",
+  //     "Poster": "https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg"
+  //   }
+  // ]
+
+  const movies = await movieModel.find({});
+  res.json({myArray: movies});
+
 })
 
 app.post('/api/movies', async (req, res) => {
@@ -84,9 +87,10 @@ app.post('/api/movies', async (req, res) => {
 
   const newMovie = new movieModel({ title, year, poster });
   await newMovie.save();
-
+  console.log("Movie Saved ", movieModel);
   res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
 })
+
 
 // start the server and listen on the specified port
 app.listen(port, () => {

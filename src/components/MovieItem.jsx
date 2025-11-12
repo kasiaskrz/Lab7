@@ -8,12 +8,12 @@ const MovieItem = (props) => {
             <Card.Body>
 
                 {/* display movie title passed as a prop */}
-                <Card.Title>{props.myMovies.Title}</Card.Title>
+                <Card.Title>{props.myMovies.title}</Card.Title>
                 {/* display movie poster */}
-                <img src={props.myMovies.Poster}></img>
+                <img src={props.myMovies.poster}></img>
             </Card.Body>
         {/* footer section displaying the year */}
-        <Card.Footer className="text-muted">{props.myMovies.Year}</Card.Footer>
+        <Card.Footer className="text-muted">{props.myMovies.year}</Card.Footer>
         </Card>
     </div>
     );
