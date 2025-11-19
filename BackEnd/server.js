@@ -20,15 +20,18 @@ import bodyParser from 'body-parser'
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// connect to MongoDB
 import mongoose from 'mongoose';
 mongoose.connect('mongodb+srv://admin:admin@katarzynalab.lxrpo7w.mongodb.net/?appName=katarzynalab');
 
+// define the structure of a Movie document in MongoDB
 const movieSchema = new mongoose.Schema({
   title: String,
   year: String,
   poster: String
 });
 
+// create a Mongoose model based on the schema
 const movieModel = mongoose.model('Movie', movieSchema);
 
 // define a route for the homepage
@@ -81,20 +84,25 @@ app.get('/api/movies', async (req, res) => {
 
 })
 
+// route for creating a new movie
 app.post('/api/movies', async (req, res) => {
 
   const { title, year, poster } = req.body;
 
-  const newMovie = new movieModel({ title, year, poster });
-  await newMovie.save();
+  // Create new movie document
+  const newMovie = new movieModel({ title, year, poster }); 
+  // Return saved movie
+  await newMovie.save(); 
   console.log("Movie Saved ", movieModel);
   res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
 })
 
 
+// route for fetching a single movie by ID
 app.get('/api/movie/:id', async (req, res) => {
+  // find movie by MongoDB ObjectId
   const movie = await movieModel.findById(req.params.id);
-  res.send(movie);
+  res.send(movie); 
 });
 
 // start the server and listen on the specified port

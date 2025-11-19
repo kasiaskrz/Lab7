@@ -10,6 +10,7 @@ import NavigationBar from './components/NavigationBar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Read from './components/Read';
 import Create from './components/Create';
+import Edit from './components/edit';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path='/' element={<Content></Content>}> </Route>
           <Route path='/read' element={<Read />}> </Route>
           <Route path='/create' element={<Create />}> </Route>
+          <Route path='/edit/:id' element={<Edit></Edit>}></Route>
         </Routes>
         
       </BrowserRouter >
